@@ -8,7 +8,7 @@
 export { Selectwin, SDK_VERSION } from './client';
 export type { SelectwinOptions, WebhooksResource } from './client';
 
-// Stripe-style typed resource namespaces (e.g. TransactionsNamespace).
+// Typed resource namespaces (e.g. TransactionsNamespace).
 export * from './namespaces';
 
 export {

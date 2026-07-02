@@ -3,7 +3,7 @@
  *
  *   import { Selectwin } from '@selectwin/sdk';
  *   const sw = new Selectwin(process.env.SELECTWIN_API_KEY!);
- *   const tx = await sw.transactions.create({ ... });   // Stripe-style aliases
+ *   const tx = await sw.transactions.create({ ... });   // Concise aliases
  *   await sw.transactions.raw.createTransaction({ ... }); // or the raw operationId
  *
  * One `Configuration` (custom fetch + middleware) is shared by every namespace,

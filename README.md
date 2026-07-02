@@ -3,7 +3,7 @@
 Official **Selectwin** Node.js / TypeScript SDK — payments (credit card, PIX, boleto),
 subscriptions, wallets, webhooks and more.
 
-> Status: **early / work in progress** (`0.1.0`). Foundation, DX shell and Stripe-style
+> Status: **early / work in progress** (`0.1.0`). Foundation, DX shell and typed
 > namespaces in place.
 
 ```bash
@@ -17,7 +17,7 @@ import { Selectwin, CardError } from '@selectwin/sdk';
 
 const sw = new Selectwin(process.env.SELECTWIN_API_KEY!); // sk_test_… / sk_live_…
 
-// Create a PIX transaction (amounts in cents). Stripe-style alias — pass the body directly:
+// Create a PIX transaction (amounts in cents). Concise alias — pass the body directly:
 const tx = await sw.transactions.create({ amount: 9990, payment: { method: 'pix', currency: 'BRL' } });
 
 // id + body / id-only aliases:
@@ -35,7 +35,7 @@ try {
 }
 ```
 
-Every resource is a namespace with **Stripe-style aliases** (`create`, `retrieve`, `update`,
+Every resource is a namespace with **Concise aliases** (`create`, `retrieve`, `update`,
 `list`, `delete`, plus resource verbs like `sw.subscriptions.pause('subs_…')`). The full generated
 API (all `operationId` methods) is always reachable via `.raw`:
 
@@ -102,7 +102,7 @@ Pass a type argument: `constructEvent<MyType>(rawBody, sig, secret)`.
 The package is a **generated core** (from the OpenAPI v2.0.0 spec) + a **hand-written DX shell**:
 
 - **Typed client** — `new Selectwin(key)` → `sw.transactions`, `sw.subscriptions`, `sw.customers`, …
-- **Stripe-style aliases** per resource (`.create`/`.retrieve`/`.update`/`.list`/`.delete` + custom
+- **Concise aliases** per resource (`.create`/`.retrieve`/`.update`/`.list`/`.delete` + custom
   verbs), delegating to the generated methods with exact types. Standard CRUD is **flattened** —
   `create(body)`, `retrieve(id)`, `update(id, body)` — while complex methods (multi-id sub-resources,
   lists) keep the object form. `.raw` exposes the full generated surface.
@@ -126,7 +126,7 @@ prefix (`sk_test_` / `sk_live_`).
 ```
 src/
   generated/        # openapi-generator typescript-fetch output — DO NOT edit; synced from selectwin-sdks
-  namespaces.ts     # GENERATED Stripe-style typed wrappers (gen-namespaces.mjs) — DO NOT edit
+  namespaces.ts     # GENERATED Typed wrappers (gen-namespaces.mjs) — DO NOT edit
   webhook-events.ts # GENERATED typed Event Catalog + discriminated event union — DO NOT edit
   http.ts           # custom fetch (retries/timeout) + middleware (idempotency, error mapping)
   errors.ts         # typed error hierarchy
