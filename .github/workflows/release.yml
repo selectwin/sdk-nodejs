@@ -45,6 +45,12 @@ jobs:
       - run: npm run build
       - run: npm test
       - name: Publish to npm (idempotent — skip if this version is already published)
+        # Auth resolves automatically: if the NPM_TOKEN secret is set it's used
+        # (handy to bootstrap the first publish); otherwise npm falls back to
+        # Trusted Publishing (OIDC) via the id-token permission above. Either way
+        # this job needs no interactive token — just push a tag.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           VER=$(node -p "require('./package.json').version")
           if npm view "@selectwin/sdk@$VER" version >/dev/null 2>&1; then
