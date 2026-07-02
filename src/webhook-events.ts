@@ -72,6 +72,9 @@ export const WEBHOOK_EVENT_TYPES = [
   'seller.analyzing',
   'seller.approved',
   'seller.refused',
+  'seller.blocked',
+  'seller.disabled',
+  'seller.reinstated',
   'withdrawal.created',
   'withdrawal.pending',
   'withdrawal.confirmed',
@@ -120,7 +123,7 @@ export type ReceivableEventType = 'receivable.created' | 'receivable.pending' | 
 export type WalletEventType = 'wallet.created' | 'wallet.deleted' | 'wallet.pending' | 'wallet.disabled' | 'wallet.enabled';
 
 /** `seller.*` event types. */
-export type SellerEventType = 'seller.created' | 'seller.updated' | 'seller.analyzing' | 'seller.approved' | 'seller.refused';
+export type SellerEventType = 'seller.created' | 'seller.updated' | 'seller.analyzing' | 'seller.approved' | 'seller.refused' | 'seller.blocked' | 'seller.disabled' | 'seller.reinstated';
 
 /** `withdrawal.*` event types. */
 export type WithdrawalEventType = 'withdrawal.created' | 'withdrawal.pending' | 'withdrawal.confirmed' | 'withdrawal.canceled' | 'withdrawal.refused' | 'withdrawal.processing' | 'withdrawal.analysis';
@@ -186,6 +189,9 @@ export interface WebhookEventObjectMap {
   'seller.analyzing': unknown;
   'seller.approved': unknown;
   'seller.refused': unknown;
+  'seller.blocked': unknown;
+  'seller.disabled': unknown;
+  'seller.reinstated': unknown;
   'withdrawal.created': ListWithdrawals200ResponseDataInner;
   'withdrawal.pending': ListWithdrawals200ResponseDataInner;
   'withdrawal.confirmed': ListWithdrawals200ResponseDataInner;

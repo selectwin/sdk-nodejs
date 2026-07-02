@@ -29,7 +29,7 @@ import {
 } from './CreateTransactionRequestCustomerTelephone';
 
 /**
- * 
+ * **Regra:** Obrigatório informar `id` (cliente salvo) **OU** os dados inline `firstName` + `lastName` + `email` (a API faz find-or-create). Enviar `customer: {}` é rejeitado.
  * @export
  * @interface CreateTransactionRequestCustomer
  */

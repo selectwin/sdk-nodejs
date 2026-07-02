@@ -18,7 +18,7 @@ const sign = (body: string) => 'sha256=' + createHmac('sha256', secret).update(b
 describe('WEBHOOK_EVENT_TYPES (the authoritative catalog)', () => {
   it('exposes the full catalog with no duplicates', () => {
     // Tracks the spec's CreateWebhookEndpointRequestEventsEnum (regen on sync:core).
-    expect(WEBHOOK_EVENT_TYPES.length).toBe(69);
+    expect(WEBHOOK_EVENT_TYPES.length).toBe(72);
     expect(new Set(WEBHOOK_EVENT_TYPES).size).toBe(WEBHOOK_EVENT_TYPES.length);
     expect(WEBHOOK_EVENT_TYPES).toContain('transaction.approved');
     expect(WEBHOOK_EVENT_TYPES).toContain('subscription.paused');

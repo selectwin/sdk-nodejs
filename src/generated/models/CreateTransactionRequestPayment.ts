@@ -36,7 +36,7 @@ import {
 } from './CreateTransactionRequestPaymentPix';
 
 /**
- * 
+ * **Regra:** Com `method=credit`, `card` é **obrigatório** (`card.id` de um cartão salvo, ou cartão completo inline: holderName, expirationMonth, expirationYear, numbering, securityCode).
  * @export
  * @interface CreateTransactionRequestPayment
  */

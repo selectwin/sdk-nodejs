@@ -270,6 +270,12 @@ export interface CreateTransaction201Response {
     metadata?: any | null;
     /**
      * 
+     * @type {number}
+     * @memberof CreateTransaction201Response
+     */
+    processingTimeMs: number;
+    /**
+     * 
      * @type {string}
      * @memberof CreateTransaction201Response
      */
@@ -353,6 +359,7 @@ export function instanceOfCreateTransaction201Response(value: object): value is 
     if (!('disputes' in value) || value['disputes'] === undefined) return false;
     if (!('timeline' in value) || value['timeline'] === undefined) return false;
     if (!('callback' in value) || value['callback'] === undefined) return false;
+    if (!('processingTimeMs' in value) || value['processingTimeMs'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
@@ -395,6 +402,7 @@ export function CreateTransaction201ResponseFromJSONTyped(json: any, ignoreDiscr
         'timeline': ((json['timeline'] as Array<any>).map(CreateTransaction201ResponseTimelineInnerFromJSON)),
         'callback': CreateTransaction201ResponseCallbackFromJSON(json['callback']),
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
+        'processingTimeMs': json['processingTimeMs'],
         'updatedAt': json['updatedAt'],
         'createdAt': json['createdAt'],
         'merchant': json['merchant'] == null ? undefined : ListCustomers200ResponseDataInnerMerchantFromJSON(json['merchant']),
@@ -440,6 +448,7 @@ export function CreateTransaction201ResponseToJSONTyped(value?: CreateTransactio
         'timeline': ((value['timeline'] as Array<any>).map(CreateTransaction201ResponseTimelineInnerToJSON)),
         'callback': CreateTransaction201ResponseCallbackToJSON(value['callback']),
         'metadata': value['metadata'],
+        'processingTimeMs': value['processingTimeMs'],
         'updatedAt': value['updatedAt'],
         'createdAt': value['createdAt'],
         'merchant': ListCustomers200ResponseDataInnerMerchantToJSON(value['merchant']),

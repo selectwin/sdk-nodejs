@@ -20,6 +20,13 @@ import {
     CreateSubscriptionRequestSplitsInnerToJSON,
     CreateSubscriptionRequestSplitsInnerToJSONTyped,
 } from './CreateSubscriptionRequestSplitsInner';
+import type { CreateSubscriptionRequestBilling } from './CreateSubscriptionRequestBilling';
+import {
+    CreateSubscriptionRequestBillingFromJSON,
+    CreateSubscriptionRequestBillingFromJSONTyped,
+    CreateSubscriptionRequestBillingToJSON,
+    CreateSubscriptionRequestBillingToJSONTyped,
+} from './CreateSubscriptionRequestBilling';
 import type { CreateTransactionRequestCallback } from './CreateTransactionRequestCallback';
 import {
     CreateTransactionRequestCallbackFromJSON,
@@ -62,13 +69,6 @@ import {
     CreateSubscriptionRequestItemsInnerToJSON,
     CreateSubscriptionRequestItemsInnerToJSONTyped,
 } from './CreateSubscriptionRequestItemsInner';
-import type { CreateTransactionRequestBilling } from './CreateTransactionRequestBilling';
-import {
-    CreateTransactionRequestBillingFromJSON,
-    CreateTransactionRequestBillingFromJSONTyped,
-    CreateTransactionRequestBillingToJSON,
-    CreateTransactionRequestBillingToJSONTyped,
-} from './CreateTransactionRequestBilling';
 
 /**
  * 
@@ -109,10 +109,10 @@ export interface CreateSubscriptionRequest {
     payment: CreateSubscriptionRequestPayment;
     /**
      * 
-     * @type {CreateTransactionRequestBilling}
+     * @type {CreateSubscriptionRequestBilling}
      * @memberof CreateSubscriptionRequest
      */
-    billing?: CreateTransactionRequestBilling;
+    billing?: CreateSubscriptionRequestBilling;
     /**
      * 
      * @type {string}
@@ -256,7 +256,7 @@ export function CreateSubscriptionRequestFromJSONTyped(json: any, ignoreDiscrimi
         'customer': CreateSubscriptionRequestCustomerFromJSON(json['customer']),
         'items': ((json['items'] as Array<any>).map(CreateSubscriptionRequestItemsInnerFromJSON)),
         'payment': CreateSubscriptionRequestPaymentFromJSON(json['payment']),
-        'billing': json['billing'] == null ? undefined : CreateTransactionRequestBillingFromJSON(json['billing']),
+        'billing': json['billing'] == null ? undefined : CreateSubscriptionRequestBillingFromJSON(json['billing']),
         'frequency': json['frequency'] == null ? undefined : json['frequency'],
         'frequencyCount': json['frequencyCount'] == null ? undefined : json['frequencyCount'],
         'exactDay': json['exactDay'] == null ? undefined : json['exactDay'],
@@ -294,7 +294,7 @@ export function CreateSubscriptionRequestToJSONTyped(value?: CreateSubscriptionR
         'customer': CreateSubscriptionRequestCustomerToJSON(value['customer']),
         'items': ((value['items'] as Array<any>).map(CreateSubscriptionRequestItemsInnerToJSON)),
         'payment': CreateSubscriptionRequestPaymentToJSON(value['payment']),
-        'billing': CreateTransactionRequestBillingToJSON(value['billing']),
+        'billing': CreateSubscriptionRequestBillingToJSON(value['billing']),
         'frequency': value['frequency'],
         'frequencyCount': value['frequencyCount'],
         'exactDay': value['exactDay'],

@@ -29,6 +29,7 @@ export * from './CreateProductRequestVariantsInnerPricing';
 export * from './CreateProductRequestVariantsInnerPricingTiersInner';
 export * from './CreateProductRequestVariantsInnerPricingTransformQuantity';
 export * from './CreateSubscriptionRequest';
+export * from './CreateSubscriptionRequestBilling';
 export * from './CreateSubscriptionRequestCustomer';
 export * from './CreateSubscriptionRequestCustomerDocument';
 export * from './CreateSubscriptionRequestFreeTrial';

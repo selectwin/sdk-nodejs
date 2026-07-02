@@ -22,33 +22,33 @@ import {
 } from './CreateTransactionRequestBillingAddress';
 
 /**
- * **Regra:** Obrigatório quando `payment.method=billet` (endereço do pagador): `billing.address.id` (salvo) ou endereço inline com postcode + street + number.
+ * 
  * @export
- * @interface CreateTransactionRequestBilling
+ * @interface CreateSubscriptionRequestBilling
  */
-export interface CreateTransactionRequestBilling {
+export interface CreateSubscriptionRequestBilling {
     [key: string]: any | any;
     /**
      * 
      * @type {CreateTransactionRequestBillingAddress}
-     * @memberof CreateTransactionRequestBilling
+     * @memberof CreateSubscriptionRequestBilling
      */
     address: CreateTransactionRequestBillingAddress;
 }
 
 /**
- * Check if a given object implements the CreateTransactionRequestBilling interface.
+ * Check if a given object implements the CreateSubscriptionRequestBilling interface.
  */
-export function instanceOfCreateTransactionRequestBilling(value: object): value is CreateTransactionRequestBilling {
+export function instanceOfCreateSubscriptionRequestBilling(value: object): value is CreateSubscriptionRequestBilling {
     if (!('address' in value) || value['address'] === undefined) return false;
     return true;
 }
 
-export function CreateTransactionRequestBillingFromJSON(json: any): CreateTransactionRequestBilling {
-    return CreateTransactionRequestBillingFromJSONTyped(json, false);
+export function CreateSubscriptionRequestBillingFromJSON(json: any): CreateSubscriptionRequestBilling {
+    return CreateSubscriptionRequestBillingFromJSONTyped(json, false);
 }
 
-export function CreateTransactionRequestBillingFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateTransactionRequestBilling {
+export function CreateSubscriptionRequestBillingFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateSubscriptionRequestBilling {
     if (json == null) {
         return json;
     }
@@ -59,11 +59,11 @@ export function CreateTransactionRequestBillingFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function CreateTransactionRequestBillingToJSON(json: any): CreateTransactionRequestBilling {
-    return CreateTransactionRequestBillingToJSONTyped(json, false);
+export function CreateSubscriptionRequestBillingToJSON(json: any): CreateSubscriptionRequestBilling {
+    return CreateSubscriptionRequestBillingToJSONTyped(json, false);
 }
 
-export function CreateTransactionRequestBillingToJSONTyped(value?: CreateTransactionRequestBilling | null, ignoreDiscriminator: boolean = false): any {
+export function CreateSubscriptionRequestBillingToJSONTyped(value?: CreateSubscriptionRequestBilling | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
