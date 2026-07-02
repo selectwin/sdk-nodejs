@@ -1,0 +1,34 @@
+name: Integration (sandbox)
+
+# The sandbox suite hits the real Selectwin sandbox API. It runs on a schedule
+# and on demand — NOT on every PR (forked PRs can't read secrets, and we don't
+# want to spend sandbox calls per push). The suite self-skips when the key is
+# absent, so a missing secret is a no-op rather than a failure.
+on:
+  schedule:
+    - cron: '0 6 * * *' # daily 06:00 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: sandbox integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Integration tests
+        env:
+          # Configure this repo secret with a sandbox key (sk_test_...) to enable.
+          SELECTWIN_SANDBOX_KEY: ${{ secrets.SELECTWIN_SANDBOX_KEY }}
+        run: npm run test:integration

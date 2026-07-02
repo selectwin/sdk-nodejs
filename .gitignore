@@ -1,0 +1,13 @@
+# deps & build
+/node_modules
+/dist
+*.tsbuildinfo
+
+# env & misc
+.env
+.env*.local
+.DS_Store
+*.log
+
+# NOTE: src/generated IS committed — it's the generated core synced from
+# selectwin-sdks (scripts/sync-core.mjs). Do not ignore it.

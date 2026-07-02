@@ -1,0 +1,8 @@
+# Normalise line endings: LF in the repo and on checkout, on every OS.
+* text=auto eol=lf
+
+# Collapse generated files in GitHub diffs / exclude from language stats.
+package-lock.json linguist-generated=true
+src/generated/**   linguist-generated=true
+src/namespaces.ts  linguist-generated=true
+src/webhook-events.ts linguist-generated=true
