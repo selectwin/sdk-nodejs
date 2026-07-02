@@ -44,5 +44,11 @@ jobs:
           fi
       - run: npm run build
       - run: npm test
-      - name: Publish to npm
-        run: npm publish --provenance --access public
+      - name: Publish to npm (idempotent — skip if this version is already published)
+        run: |
+          VER=$(node -p "require('./package.json').version")
+          if npm view "@selectwin/sdk@$VER" version >/dev/null 2>&1; then
+            echo "@selectwin/sdk@$VER is already on npm — skipping publish."
+          else
+            npm publish --provenance --access public
+          fi
