@@ -101,20 +101,35 @@ export function constructEvent(
     throw new SignatureVerificationError('Webhook signature verification failed');
   }
 
-  // Optional: replay-proof v1 scheme.
+  // Optional: replay-proof v1 scheme. Fail CLOSED — once a caller opts in (via
+  // signatureV1 and/or tolerance), a missing/malformed header must throw, never
+  // silently skip the check (a captured replay still carries a valid sha256, so
+  // the primary check alone can't stop it).
+  if (options.tolerance != null && !options.signatureV1) {
+    throw new SignatureVerificationError(
+      '`tolerance` requires the X-Selectwin-Signature-v1 header (pass it as signatureV1)',
+    );
+  }
   if (options.signatureV1) {
     const { t, v1 } = parseV1(options.signatureV1);
-    if (t && v1) {
-      const body = typeof rawBody === 'string' ? rawBody : rawBody.toString('utf8');
-      const expectedV1 = hmacHex(secret, `${t}.${body}`);
-      if (!timingSafeEqualHex(v1, expectedV1)) {
-        throw new SignatureVerificationError('Webhook v1 signature verification failed');
+    if (!t || !v1) {
+      throw new SignatureVerificationError(
+        'Malformed X-Selectwin-Signature-v1 header (expected "t=<unix>,v1=<hex>")',
+      );
+    }
+    const body = typeof rawBody === 'string' ? rawBody : rawBody.toString('utf8');
+    const expectedV1 = hmacHex(secret, `${t}.${body}`);
+    if (!timingSafeEqualHex(v1, expectedV1)) {
+      throw new SignatureVerificationError('Webhook v1 signature verification failed');
+    }
+    if (options.tolerance != null) {
+      const ts = Number(t);
+      if (!Number.isFinite(ts)) {
+        throw new SignatureVerificationError('Webhook v1 timestamp is not a valid number');
       }
-      if (options.tolerance != null) {
-        const nowSecs = Math.floor((options.now ? options.now() : Date.now()) / 1000);
-        if (Math.abs(nowSecs - Number(t)) > options.tolerance) {
-          throw new SignatureVerificationError('Webhook timestamp is outside the tolerance window');
-        }
+      const nowSecs = Math.floor((options.now ? options.now() : Date.now()) / 1000);
+      if (Math.abs(nowSecs - ts) > options.tolerance) {
+        throw new SignatureVerificationError('Webhook timestamp is outside the tolerance window');
       }
     }
   }

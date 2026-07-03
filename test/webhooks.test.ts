@@ -76,5 +76,34 @@ describe('constructEvent', () => {
         constructEvent(payload, validSig, secret, { signatureV1: `t=${t},v1=deadbeef` }),
       ).toThrow(SignatureVerificationError);
     });
+
+    // Fail-closed: opting into v1/tolerance must never silently skip the check.
+    it('rejects a malformed v1 header (missing v1=) instead of silently passing', () => {
+      expect(() =>
+        constructEvent(payload, validSig, secret, { signatureV1: `t=${t}`, tolerance: 300 }),
+      ).toThrow(SignatureVerificationError);
+    });
+
+    it('rejects an empty v1 header when opted in', () => {
+      expect(() =>
+        constructEvent(payload, validSig, secret, { signatureV1: '   ' }),
+      ).toThrow(SignatureVerificationError);
+    });
+
+    it('rejects tolerance set without a signatureV1 header', () => {
+      expect(() => constructEvent(payload, validSig, secret, { tolerance: 300 })).toThrow(
+        SignatureVerificationError,
+      );
+    });
+
+    it('rejects a non-numeric v1 timestamp when tolerance is enforced', () => {
+      const forgedV1 = createHmac('sha256', secret).update(`abc.${payload}`).digest('hex');
+      expect(() =>
+        constructEvent(payload, validSig, secret, {
+          signatureV1: `t=abc,v1=${forgedV1}`,
+          tolerance: 300,
+        }),
+      ).toThrow(SignatureVerificationError);
+    });
   });
 });

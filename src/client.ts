@@ -49,7 +49,14 @@ import {
 import { buildMiddleware, createFetchApi } from './http';
 import { constructEvent } from './webhooks';
 
-export const SDK_VERSION = '0.1.0';
+declare const __SDK_VERSION__: string | undefined;
+/**
+ * SDK version — injected at build from package.json (the single source of truth),
+ * so the User-Agent can never drift from the published version. Falls back to
+ * `0.0.0-dev` when run unbundled without the define (e.g. ad-hoc ts execution).
+ */
+export const SDK_VERSION: string =
+  typeof __SDK_VERSION__ === 'string' ? __SDK_VERSION__ : '0.0.0-dev';
 const DEFAULT_BASE_PATH = 'https://api.selectwin.io';
 
 export interface SelectwinOptions {

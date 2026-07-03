@@ -1,5 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi } from 'vitest';
-import { Selectwin, CardError } from '../src';
+import { Selectwin, CardError, SDK_VERSION } from '../src';
+
+describe('SDK_VERSION', () => {
+  it('matches package.json (single source of truth — guards against drift)', () => {
+    const { version } = JSON.parse(
+      readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
+    ) as { version: string };
+    expect(SDK_VERSION).toBe(version);
+  });
+});
 
 function jsonResponse(status: number, body: unknown, headers: Record<string, string> = {}) {
   return new Response(JSON.stringify(body), {
