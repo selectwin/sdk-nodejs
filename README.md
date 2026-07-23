@@ -3,7 +3,7 @@
 Official **Selectwin** Node.js / TypeScript SDK — payments (credit card, PIX, boleto),
 subscriptions, wallets, webhooks and more.
 
-> Status: **early / work in progress** (`0.1.0`). Foundation, DX shell and typed
+> Status: **early / work in progress**. Foundation, DX shell and typed
 > namespaces in place.
 
 ```bash
@@ -172,7 +172,6 @@ Coverage: read-only smoke (auth + list envelope + auto-pagination across resourc
 mapping (bogus key → `AuthenticationError`), and a customer create → retrieve → delete round-trip
 plus an idempotency replay. Writes are sandbox-only and cleaned up in `afterAll`.
 
-## Roadmap
+## Documentation
 
-- Publish the package (npm) once the API stabilises; wire CI to run unit tests on PRs and the
-  sandbox suite on a schedule/with a repo secret.
+Full guides and the API reference live at [selectwin.io/docs](https://selectwin.io/docs/sdk/nodejs/overview).

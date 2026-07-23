@@ -44,7 +44,7 @@
     "type": "git",
     "url": "https://github.com/selectwin/sdk-nodejs.git"
   },
-  "homepage": "https://docs.selectwin.io",
+  "homepage": "https://selectwin.io/docs/sdk/nodejs/overview",
   "keywords": [
     "selectwin",
     "payments",
