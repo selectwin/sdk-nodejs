@@ -111,6 +111,8 @@ The package is a **generated core** (from the OpenAPI v2.0.0 spec) + a **hand-wr
   `PermissionError`, `NotFoundError`, `ConflictError`, `ApiError`, `ApiConnectionError`.
 - **Auto-retries** (429/5xx/network) with exponential backoff, honouring `Retry-After`.
 - **Idempotency** — an `X-Idempotency-Key` is added to every mutation (override via headers).
+- **Safe paths** — a path parameter of `.` or `..` is refused before the request is sent (it would reach another
+  endpoint), and redirects are not followed (the API never redirects).
 - **Timeouts** (`AbortController`).
 - **Auto-pagination** — top-level `list()` returns an `AutoPager` (await = first page, `for await`
   = all items, `.toArray()`, `.pages()`); plus a low-level `paginate(listFn, params)` helper.

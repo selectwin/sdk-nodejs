@@ -20,8 +20,20 @@ import {
   errorFromResponse,
   RateLimitError,
   SelectwinError,
+  ValidationError,
   type ErrorEnvelope,
 } from './errors';
+
+/**
+ * Does this request URL carry a `.` or `..` path segment? The generated code puts each ID through
+ * `encodeURIComponent`, which leaves dots alone, and fetch's URL parser then RESOLVES them:
+ * `variants.delete('prd_1', '..')` would leave as DELETE /v1/products/prd_1 — another operation, with the key.
+ * No Selectwin ID is `.` or `..` (security sweep 31, S-1). Checked on the raw string, before any URL parsing.
+ */
+export function hasDotSegment(url: string): boolean {
+  const path = url.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/?#]*/i, '').split(/[?#]/)[0] ?? '';
+  return path.split('/').some((segment) => /^(?:\.|%2e){1,2}$/i.test(segment));
+}
 
 const MUTATING = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 // Retry only where a retry can plausibly help. NOT 409 (idempotency conflict).
@@ -58,7 +70,11 @@ export function createFetchApi(options: RetryOptions): FetchAPI {
       if (controller && options.timeoutMs) {
         timer = setTimeout(() => controller.abort(), options.timeoutMs);
       }
-      const attemptInit: RequestInit = controller ? { ...init, signal: controller.signal } : { ...init };
+      // `redirect: 'error'`: the API never redirects, and fetch keeps custom headers such as `selectkey` on a
+      // cross-origin redirect (it strips only Authorization) — following one would hand the key to another host.
+      const attemptInit: RequestInit = controller
+        ? { ...init, redirect: 'error', signal: controller.signal }
+        : { ...init, redirect: 'error' };
       try {
         const res = await doFetch(input, attemptInit);
         if (timer) clearTimeout(timer);
@@ -88,6 +104,11 @@ export function createFetchApi(options: RetryOptions): FetchAPI {
 export function buildMiddleware(userAgent: string): Middleware {
   return {
     async pre(context: RequestContext): Promise<FetchParams | void> {
+      if (hasDotSegment(context.url)) {
+        throw new ValidationError(
+          'Selectwin: a path parameter cannot be "." or ".." (the request would reach another endpoint).',
+        );
+      }
       const method = (context.init.method ?? 'GET').toUpperCase();
       const headers = new Headers(context.init.headers);
       if (!headers.has('User-Agent')) headers.set('User-Agent', userAgent);

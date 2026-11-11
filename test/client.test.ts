@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, it, expect, vi } from 'vitest';
-import { Selectwin, CardError, SDK_VERSION } from '../src';
+import { Selectwin, CardError, SDK_VERSION, ValidationError } from '../src';
 
 describe('SDK_VERSION', () => {
   it('matches package.json (single source of truth — guards against drift)', () => {
@@ -56,6 +56,28 @@ describe('Selectwin client (integration via injected fetch)', () => {
     expect(err).toBeInstanceOf(CardError);
     expect(err.displayMessage).toBe('Recusado');
     expect(err.reversible).toBe(false);
+  });
+
+  it('refuses a "." or ".." path parameter before sending (security sweep 31, S-1)', async () => {
+    const fetchImpl = vi.fn(async () => jsonResponse(204, {}));
+    const sw = new Selectwin('sk_test_abc', { fetch: fetchImpl as never, maxRetries: 0, timeoutMs: 0 });
+    // Without the guard, '..' leaves as DELETE /v1/products/prd_1 — the whole product, not the variant.
+    for (const id of ['..', '.']) {
+      await expect(sw.variants.delete({ productId: 'prd_1', variantId: id })).rejects.toBeInstanceOf(ValidationError);
+      await expect(sw.customers.retrieve(id)).rejects.toBeInstanceOf(ValidationError);
+    }
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it('never follows a redirect (the selectkey header would go along)', async () => {
+    const inits: RequestInit[] = [];
+    const fetchImpl = async (_url: string | URL, init?: RequestInit) => {
+      inits.push(init ?? {});
+      return jsonResponse(200, { id: 'cus_1' });
+    };
+    const sw = new Selectwin('sk_test_abc', { fetch: fetchImpl as never, maxRetries: 0, timeoutMs: 0 });
+    await sw.customers.retrieve('cus_1').catch(() => undefined);
+    expect(inits[0]?.redirect).toBe('error');
   });
 
   it('reuses one idempotency key across retries', async () => {

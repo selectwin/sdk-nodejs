@@ -101,3 +101,25 @@ describe('createFetchApi', () => {
     expect(impl).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('hasDotSegment (security sweep 31, S-1)', () => {
+  it('finds "." / ".." segments (and their %2e forms) in the raw path only', async () => {
+    const { hasDotSegment } = await import('../src/http');
+    for (const bad of [
+      'https://api.selectwin.io/v1/products/prd_1/variants/..',
+      'https://api.selectwin.io/v1/customers/./cards',
+      'https://api.selectwin.io/v1/customers/%2E%2E',
+      'https://api.selectwin.io/v1/customers/.%2e?x=1',
+    ]) {
+      expect(hasDotSegment(bad), bad).toBe(true);
+    }
+    for (const ok of [
+      'https://api.selectwin.io/v1/customers/cus_1',
+      'https://api.selectwin.io/v1/customers/cus_1.2',
+      'https://api.selectwin.io/v1/customers/%252e%252e',
+      'https://api.selectwin.io/v1/customers?q=..',
+    ]) {
+      expect(hasDotSegment(ok), ok).toBe(false);
+    }
+  });
+});
